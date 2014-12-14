@@ -1,7 +1,7 @@
 jstemplate v1.0.0
 ==================
 
-### Personal template for javascript projects.
+### My personal template for javascript projects.
 
 ### Features
 
@@ -14,7 +14,7 @@ jstemplate v1.0.0
 
 ##### Clone the repo
 ```
-git clone https://github.com/anthdeldev/Game-GruntFile
+git clone https://github.com/anthdeldev/jstemplate
 ```
 
 ##### Install dependencies

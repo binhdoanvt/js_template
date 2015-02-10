@@ -1,28 +1,16 @@
 {
-  "name": "jstemplate",
-  "version": "1.0.0",
-  "description": "template for a personal javascript project",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "name": "js_template",
+  "description": "My personal template for javascript projects",
+  "devDependencies": {
+    "grunt": "0.4.5",
+    "load-grunt-tasks": "3.1.0",
+    "grunt-contrib-clean": "0.6.0",
+    "grunt-contrib-jshint": "0.11.0",
+    "grunt-contrib-uglify": "0.7.0",
+    "grunt-contrib-uglify": "0.7.0",
+    "grunt-contrib-watch": "0.6.1",
+    "grunt-express": "1.4.1"
   },
-	"devDependencies": {
-		"grunt": "0.x.x",
-		"load-grunt-tasks": "0.6.0",
-		"grunt-contrib-clean": "0.6.x",
-		"grunt-contrib-copy": "0.4.x",
-		"grunt-contrib-uglify": "0.6.0",
-		"grunt-contrib-watch": "0.6.1",
-		"grunt-open": "0.2.3",
-		"grunt-express": "1.4.1",
-		"grunt-contrib-concat": "0.5.0"
-	},
-  "keywords": [
-    "javascript",
-    "template",
-    "grunt",
-    "html5"
-  ],
-  "author": "Anthony Del Ciotto (anthdel.developer@gmail.com)",
-  "license": "MIT"
+  "author": "Anthony Del Ciotto",
+  "license": "BSD-2-Clause"
 }

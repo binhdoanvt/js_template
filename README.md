@@ -1,14 +1,13 @@
-jstemplate v1.0.0
+js_template
 ==================
 
 ### My personal template for javascript projects.
 
 ### Features
 
-* Seperate development and production build modes.
 * Javascript concatenation and minification.
-* Watch task to automatically rebuild Javascript and refresh the webpage on any changes.
-* Automatic local express HTTP server creation and auto opening. 
+* Watch task to inject css / html and automatically rebuild Javascript, refreshing the webpage on any changes.
+* Automatic local express HTTP server creation.
 
 #### Instructions for use
 
@@ -24,7 +23,8 @@ npm install
 
 ##### Run grunt
 ```
-grunt // default task is "development" build mode
-grunt development // you can also run development build mode explicitly
-grunt production // run production build mode
+grunt lint // perform a lint on all js files
+```
+```
+grunt // lint, build and begin watching all files
 ```

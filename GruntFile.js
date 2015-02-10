@@ -1,10 +1,12 @@
-/* #####################################################################
- * Title: GruntFile.js
- * Desc: The grunt build configuration file.
+/* #############################################################################
+ * Title: Gruntfile.js
+ * Desc: The grunt build configuration file. Don't really need to touch this,
+ * unless you feel like breaking everything.....
  * Author: Anthony Del Ciotto
- * Date: 24th October 2014
+ * Date: 14th January 2015
  * License: MIT
- * #################################################################### */
+ * #############################################################################
+*/
 
 module.exports = function(grunt) {
   require('load-grunt-tasks')(grunt);
@@ -13,185 +15,70 @@ module.exports = function(grunt) {
   // make sure to list them here in order
   // rather than just using the '*' wildcard.
   var srcFiles = [
-    // '<%= dirs.src %>/lib/dependeny.js',
+    '<%= dirs.src %>/lib/polyfill.js',
     '<%= dirs.src %>/app.js'
   ];
-  var banner = [
-    '/**',
-    ' * @license',
-    ' * <%= pkg.name %> - v<%= pkg.version %>',
-    ' * Copyright (c) 2014, Anthony Del Ciotto',
-    ' *',
-    ' * Compiled: <%= grunt.template.today("yyyy-mm-dd") %>',
-    ' *',
-    ' * <%= pkg.name %> is licensed under the <%= pkg.license %> License.',
-    ' */',
-    ''
-  ].join('\n');
 
-
-  // object to represent the type of environment we are running in.
-  // eg. production or development
-  var EnvType = {
-    prod: 'production',
-    dev: 'development'
-  };
-
-  // configure the tasks
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
 
-    // object to represent our source and final build directorys
     dirs: {
-        build: 'dist',
-        src: 'src',
+        build: 'build/js',
+        src: 'app/js',
     },
     files: {
         srcBlob: '<%= dirs.src %>/**/*.js',
-        build: '<%= dirs.build %>/app.dev.js',
-        buildMin: '<%= dirs.build %>/app.min.js'
+        build: '<%= dirs.build %>/main.min.js'
     },
 
-    // wipe the build directory clean
     clean: {
       build: {
-        src: ['<%= dirs.build %>']
+        src: ['<%= dirs.build %>/*.js']
       }
     },
 
-    // configure concatenation for the js: for dev mode.
-    // this task will only concat files. useful for when in development
-    // and debugging as the file will be readable.
-    concat: {
-      options: {
-        banner: banner
-      },
-      dist: {
-        src: srcFiles,
-        dest: '<%= files.build %>'
-      }
+    jshint: {
+      files: ['Gruntfile.js', '<%= files.srcBlob %>', '!<%= dirs.src %>/lib/*.js']
     },
 
-    // configure minification for the js: for prod mode.
-    // this task both concatenates and minifies the files.
     uglify: {
       target: {
         options: {
-          banner: banner,
-          mangle: false
+          sourceMap: true,
+          sourceMapIncludeSources: true,
+          sourceMapRoot: '<%= dirs.src %>'
         },
-        files: {
-          '<%= files.buildMin %>': srcFiles
-        }
+        files: { '<%= files.build %>': srcFiles }
       },
     },
 
-
-    // grunt-express will serve the files from the folders listed in `bases`
-    // on specified `port` and `hostname`
     express: {
       all: {
         options: {
-          port: 3000,
+          port: 6080,
           hostname: "0.0.0.0",
-          bases: ['./'],
+          bases: ['build'],
         }
       }
     },
 
-    // configure grunt-watch to monitor the projects files
-    // and perform each specific file type build task.
     watch: {
-      options: {
-        livereload: true
+      options: { livereload: true },
+      html: {
+        files: ['build/*.html']
       },
-
+      styles: {
+        files: ['build/css/styles.css']
+      },
       scripts: {
-        files: ['<%= files.srcBlob %>' ],
-        tasks: ['concat']
+        files: ['Gruntfile.js', '<%= files.srcBlob %>' ],
+        tasks: ['build']
       }
     },
-
-    // grunt-open will open your browser at the project's URL
-    open: {
-      all: {
-        // Gets the port from the connect configuration
-        path: 'http://localhost:<%= express.all.options.port%>'
-      }
-    }
   });
 
-  /**
-   * Utility function to register the scripts task to grunt.
-   * @param  {[EnvType]} mode  [the mode, either dev, or production]
-   */
-  var registerScriptsTask = function(mode) {
-    // if we are running in dev mode, only concat the scripts
-    // otherwise minify them also
-    var scriptTask = (mode === EnvType.prod) ? 'uglify:target' :
-      'concat';
-
-    grunt.registerTask('scripts:' + mode,
-      'Compiles the javascript files in ' + mode + ' mode',
-      [scriptTask]
-    );
-  };
-
-  /**
-   * Utility function to register the build task to grunt.
-   * @param  {[type]} mode  [the mode, either dev, or production]
-   */
-  var registerBuildTask = function(mode) {
-    grunt.registerTask('build:' + mode, 
-      'Compiles all of the assets and copies them' +
-      ' to th build directory', 
-      ['clean', 'scripts:' + mode]
-    );
-  };
-
-  /**
-   * Utility function to register the server task to grunt.
-   * @param  {[type]} mode  [the mode, either dev, or production]
-   */
-  var registerServerTask = function(mode) {
-    var tasks = ['express', 'open'];
-
-    // if we are running in development mode, run the watch task
-    if (mode === EnvType.dev) {
-      tasks.push('watch');
-    } else if (mode === EnvType.prod) {
-      tasks.push('express-keepalive');
-    }
-
-    grunt.registerTask('server:' + mode,
-      'Begins the express server and opens it in a browser' +
-      'constantly watching for changes', 
-      tasks
-    );
-  }; 
-
-  /**
-   * Utility function to register the main task to grunt.
-   * @param  {[type]} mode  [the mode, either dev, or production]
-   */
-  var registerMainTask = function(mode) {
-    grunt.registerTask(mode, 
-      'Watches the project for changes' +
-      'automatically builds them and runs a server', 
-      ['build:' + mode, 'server:' + mode]
-    );
-  };
-
-  // register all the tasks for both development and production
-  registerScriptsTask(EnvType.dev);
-  registerScriptsTask(EnvType.prod);
-  registerBuildTask(EnvType.dev);
-  registerBuildTask(EnvType.prod);
-  registerServerTask(EnvType.dev);
-  registerServerTask(EnvType.prod);
-  registerMainTask(EnvType.dev);
-  registerMainTask(EnvType.prod);
-
-  // register development mode as the main task
-  grunt.registerTask('default', 'Default task: development', 'development');
+  grunt.registerTask('lint', 'Perform a lint on all the js source files', ['jshint']);
+  grunt.registerTask('build', 'Clean the build directory and concat + minify all js source files', ['clean', 'lint', 'uglify']);
+  grunt.registerTask('default', 'Watch all js and css files for changes and rebuld appropriatly',
+                    ['lint', 'build', 'express', 'watch']);
 };

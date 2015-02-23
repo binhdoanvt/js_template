@@ -1,8 +1,7 @@
-(function () {
-	'use strict';
+(function() {
+  'use strict';
 
-	window.onload = function() {
-		alert('js_template');
-	};
-
+  window.onload = function() {
+    console.log('Hello, World!');
+  };
 })();

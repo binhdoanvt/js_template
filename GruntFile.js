@@ -16,7 +16,7 @@ module.exports = function(grunt) {
   // rather than just using the '*' wildcard.
   var srcFiles = [
     '<%= dirs.src %>/lib/polyfill.js',
-    '<%= dirs.src %>/app.js'
+    '<%= dirs.src %>/main.js'
   ];
 
   grunt.initConfig({
